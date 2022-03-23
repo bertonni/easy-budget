@@ -1,13 +1,50 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+
+@layer base {
+  body {
+    @apply bg-texture bg-center font-lato;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+      @apply bg-slate-400 bg-opacity-30;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+      @apply bg-slate-400 bg-opacity-60;
+  }
+  .input {
+    @apply text-gray-600 h-10 w-full border rounded disabled:bg-slate-100
+    pl-2 placeholder-transparent focus:outline-none;
+  }
+  .input-label {
+    @apply absolute left-2 -top-5 text-sm transition-all
+    peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400
+    peer-placeholder-shown:top-2 peer-focus:-top-5
+    peer-focus:left-0 peer-focus:text-sm peer-focus:text-gray-700;
+  }
+  .select {
+    @apply text-gray-600 h-10 w-full border rounded pl-2
+    placeholder-transparent focus:outline-none;
+  }
+  .select-label {
+    @apply absolute left-2 -top-5 text-sm transition-all
+    peer-invalid:text-base peer-invalid:text-gray-400 peer-invalid:top-2
+    peer-focus:-top-5 peer-focus:left-0 peer-focus:text-gray-700
+    peer-focus:text-sm;
+  }
 }
