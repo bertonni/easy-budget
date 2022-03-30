@@ -5,8 +5,8 @@ import AddBudgetModal from "../components/budgets/AddBudgetModal";
 import EditBudgetModal from "../components/budgets/EditBudgetModal";
 import AddExpenseModal from "../components/budgets/AddExpenseModal";
 import { useBudgets } from "../contexts/BudgetsContext";
-import ViewExpensesModal from "../components/budgets/ViewExpensesModal";
 import ConfirmBox from "../components/ConfirmBox";
+import { app } from '../firebase';
 
 export default function Budgets() {
   const {
@@ -17,10 +17,11 @@ export default function Budgets() {
     getVariableExpenses,
   } = useBudgets();
 
+  console.log(app)
+
   const [showEditBudgetModal, setShowEditBudgetModal] = useState(false);
   const [showAddBudgetModal, setShowAddBudgetModal] = useState(false);
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
-  const [viewExpensesModal, setViewExpensesModal] = useState(false);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [budgetId, setBudgetId] = useState(false);
   const [budgetName, setBudgetName] = useState("");
@@ -50,18 +51,6 @@ export default function Budgets() {
       ref.current();
     }
   }, [budgets, currYear, currMonth]);
-
-  function handleShowExpensesModal(value, id = null, name = null) {
-    setViewExpensesModal(value);
-    setBudgetId(id);
-    setBudgetName(name);
-  }
-
-  function handleAddExpenseModal(value, id) {
-    setShowAddExpenseModal(value);
-    if (id === null) setBudgetId("uncategorized");
-    else setBudgetId(id);
-  }
 
   function handleEditBudgetModal(value, id, name, max) {
     setShowEditBudgetModal(value);
@@ -103,14 +92,6 @@ export default function Budgets() {
           defaultBudgetId={budgetId}
         />
       }
-      viewExpensesModal={
-        <ViewExpensesModal
-          show={viewExpensesModal}
-          setViewExpensesModal={setViewExpensesModal}
-          budgetId={budgetId}
-          name={budgetName}
-        />
-      }
       editBudgetModal={
         <EditBudgetModal
           show={showEditBudgetModal}
@@ -135,22 +116,16 @@ export default function Budgets() {
               title={"Despesas Fixas"}
               amount={totalFixedAmount}
               showEditModal={handleEditBudgetModal}
-              showExpenseModal={handleAddExpenseModal}
-              showViewExpensesModal={handleShowExpensesModal}
               handleConfirmBox={handleConfirmDelete}
               textColor="text-gray-100"
-              maxTextColor="text-gray-400"
             />
             <BudgetCard
-              data={fixedExpenses}
+              data={variableExpenses}
               title={"Despesas Variáveis"}
               amount={totalVariableAmount}
               showEditModal={handleEditBudgetModal}
-              showExpenseModal={handleAddExpenseModal}
-              showViewExpensesModal={handleShowExpensesModal}
               handleConfirmBox={handleConfirmDelete}
               textColor="text-gray-100"
-              maxTextColor="text-gray-400"
             />
 
             <BudgetCard
@@ -158,10 +133,7 @@ export default function Budgets() {
               title="Total Geral"
               amount={totalAmounts || 0}
               max={totalAmounts || 0}
-              showExpenseModal={setShowAddExpenseModal}
-              showViewExpensesModal={handleShowExpensesModal}
               textColor="text-gray-100"
-              maxTextColor="text-gray-400"
               total
             />
           </>

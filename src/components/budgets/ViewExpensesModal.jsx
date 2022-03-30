@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { useBudgets } from "../../contexts/BudgetsContext";
+// import { useEffect, useState } from "react";
+// import { useBudgets } from "../../contexts/BudgetsContext";
 import { currencyFormatter } from "../../utils";
 
 const backdrop = {
@@ -36,23 +36,15 @@ const item = {
 export default function ViewExpensesModal({
   show,
   setViewExpensesModal,
-  budgetId,
+  expenses,
   name,
 }) {
-  const { budgets, currYear, currMonth, deleteExpense } = useBudgets();
-  const [expenses, setExpenses] = useState(
-    budgets[currYear][currMonth].expenses
-  );
+  // const { budgets, currYear, currMonth, deleteExpense } = useBudgets();
 
-  useEffect(() => {
-    setExpenses(budgets[currYear][currMonth].expenses);
-  }, [show]);
-
-  function handleDeleteExpense(expense) {
-    const newExpenses = expenses.filter((exp) => exp.id !== expense.id);
-    setExpenses(newExpenses);
-    deleteExpense(expense);
-  }
+  // function handleDeleteExpense(expense) {
+  //   const newExpenses = expenses.filter((exp) => exp.id !== expense.id);
+  //   deleteExpense(expense);
+  // }
 
   function handleStopPropagation(e) {
     e.stopPropagation();
@@ -62,7 +54,8 @@ export default function ViewExpensesModal({
     <AnimatePresence exitBeforeEnter>
       {show && (
         <motion.div
-          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center items-start"
+          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10
+           flex justify-center items-start"
           variants={backdrop}
           initial="hidden"
           animate="visible"
@@ -99,17 +92,29 @@ export default function ViewExpensesModal({
                       variants={item}
                       key={expense.id}
                       className="h-10 flex items-center w-full gap-2 cursor-pointer
-                       hover:bg-gray-200 px-2 rounded"
+                       hover:border-b hover:border-t rounded"
                     >
-                      <h2 className="grow">{expense.description}</h2>
-                      <span>{currencyFormatter.format(expense.amount)}</span>
+                      <h2 className="grow truncate" title={expense.description}>
+                        {expense.description}
+                      </h2>
+                      <span className="">
+                        {currencyFormatter.format(expense.amount)}
+                      </span>
                       <button
-                        onClick={() => handleDeleteExpense(expense)}
+                        onClick={() => console.log("todo view")}
+                        title="View Expense"
+                        className="py-1 px-1 text-center bg-blue-300 text-white rounded flex
+                      items-center justify-center hover:bg-blue-400"
+                      >
+                        <FontAwesomeIcon icon="eye" />
+                      </button>
+                      <button
+                        onClick={() => console.log("todo delete")}
                         title="Delete Expense"
                         className="py-1 px-2 text-center bg-red-300 text-white rounded flex
                       items-center justify-center hover:bg-red-400"
                       >
-                        <FontAwesomeIcon icon="times" />
+                        <FontAwesomeIcon icon="trash" />
                       </button>
                     </motion.div>
                   );

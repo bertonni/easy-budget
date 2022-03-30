@@ -14,9 +14,7 @@ export default function Container({
   editBudgetModal = null,
   addBudgetModal = null,
   addExpenseModal = null,
-  viewExpensesModal = null,
   showIncomeModal,
-  // showBudgetModal,
   showExpenseModal,
 }) {
   const classes = `min-h-screen min-w-screen flex flex-col items-center md:px-10 relative`;
@@ -31,7 +29,6 @@ export default function Container({
       {editBudgetModal}
       {addBudgetModal}
       {addExpenseModal}
-      {viewExpensesModal}
       {/* <MenuTop page={page} /> */}
       <div className="px-5 w-full">
         {title && (
