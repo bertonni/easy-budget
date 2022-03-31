@@ -6,7 +6,6 @@ import EditBudgetModal from "../components/budgets/EditBudgetModal";
 import AddExpenseModal from "../components/budgets/AddExpenseModal";
 import { useBudgets } from "../contexts/BudgetsContext";
 import ConfirmBox from "../components/ConfirmBox";
-import { app } from '../firebase';
 
 export default function Budgets() {
   const {
@@ -17,7 +16,6 @@ export default function Budgets() {
     getVariableExpenses,
   } = useBudgets();
 
-  console.log(app)
 
   const [showEditBudgetModal, setShowEditBudgetModal] = useState(false);
   const [showAddBudgetModal, setShowAddBudgetModal] = useState(false);

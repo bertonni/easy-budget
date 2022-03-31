@@ -1,19 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import reportWebVitals from "./reportWebVitals";
 import { BudgetsProvider } from "./contexts/BudgetsContext";
 import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BudgetsProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </BudgetsProvider>
+    <AuthProvider>
+      <BudgetsProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </BudgetsProvider>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

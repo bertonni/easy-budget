@@ -24,11 +24,12 @@ import {
   faWifi,
   faHome,
   faBullseye,
-  faEye
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Incomes from "./pages/Incomes";
 import Activities from "./pages/Activities";
+import RequireAuth from "./components/RequireAuth";
 
 library.add(
   fab,
@@ -62,9 +63,18 @@ function App() {
   return (
     <Routes location={location} key={location.key}>
       <Route path="/" element={<Home />} />
-      <Route path="/activities" element={<Activities />} />
-      <Route path="/budgets" element={<Budgets />} />
-      <Route path="/incomes" element={<Incomes />} />
+      <Route
+        path="/activities"
+        element={<RequireAuth component={<Activities />} />}
+      />
+      <Route
+        path="/budgets"
+        element={<RequireAuth component={<Budgets />} />}
+      />
+      <Route
+        path="/incomes"
+        element={<RequireAuth component={<Incomes />} />}
+      />
       <Route
         path="*"
         element={
