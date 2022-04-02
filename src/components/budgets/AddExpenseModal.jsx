@@ -96,8 +96,8 @@ export default function AddExpenseModal({
       type,
       paymentMethod,
       installments: {
-        current: hasInstallments ? installmentsCurrent : 1,
-        total: installments,
+        current: hasInstallments ? parseInt(installmentsCurrent) : 1,
+        total: parseInt(installments),
       },
       amount: parseFloat(amount),
       category,
@@ -132,8 +132,8 @@ export default function AddExpenseModal({
           onMouseDown={() => handleClose()}
         >
           <motion.div
-            className="relative w-full sm:max-w-sm md:max-w-md my-0 mx-5 md:mx-10 py-5 px-5 bg-white
-              max-h-116 flex flex-col justify-center gap-2 z-40 rounded"
+            className="relative w-full sm:max-w-md md:max-w-md my-0 mx-5 md:mx-10 py-5 px-5 bg-white
+              max-h-120 flex flex-col justify-center gap-2 z-40 rounded"
             variants={modal}
             transition="transition"
             onMouseDown={(e) => handleStopPropagation(e)}

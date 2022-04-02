@@ -9,17 +9,24 @@ export function useBudgets() {
   return useContext(BudgetsContext);
 }
 
+const monthlyBase = {
+  incomes: [],
+  expenses: [],
+  totalIncomes: 0,
+  totalExpenses: 0,
+  balance: 0
+}
+
+const currentYear = new Date().getFullYear();
+const currentMonth = new Date().getMonth() + 1;
+
 const initialBudget = {
-  2022: {
-    3: {
-      incomes: [],
-      expenses: [],
-      totalIncomes: 0,
-      totalExpenses: 0,
-      balance: 0,
-    },
-  },
+  2022: {},
 };
+
+for (let index = currentMonth; index <= 12; index++) {
+  initialBudget[currentYear][index] = monthlyBase;
+}
 
 const initialCategories = [
   "Água",
@@ -123,7 +130,22 @@ export function BudgetsProvider({ children }) {
     const expensesCopy = Array.from(budgets[currYear][currMonth].expenses);
     const budgetsCopy = Object.assign({}, budgets);
 
-    expensesCopy.push(newExpenseBase);
+    
+    const current = parseInt(newExpense.installments.current);
+    const total = parseInt(newExpense.installments.total);
+
+    if (current < total) {
+      for (let i = currMonth; i <= (currMonth + total - current); i++) {
+        
+        const newExpenseCopy = Object.assign({}, newExpense);
+        newExpenseCopy.installments = Object.assign({}, newExpense.installments);
+        newExpenseCopy.amount = parseFloat((newExpense.amount / total));
+        newExpenseCopy.installments.current = i;
+
+        budgetsCopy[currYear][i].expenses.push(newExpenseCopy);
+      }
+    }
+
     budgetsCopy[currYear][currMonth].totalExpenses += newExpense.amount;
     budgetsCopy[currYear][currMonth].expenses = expensesCopy;
 

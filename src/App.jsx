@@ -2,7 +2,7 @@ import Budgets from "./pages/Budgets";
 import Home from "./pages/Home";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { fab } from "@fortawesome/free-brands-svg-icons";
+import { fab, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import {
   faEdit,
   faTrash,
@@ -33,6 +33,7 @@ import RequireAuth from "./components/RequireAuth";
 
 library.add(
   fab,
+  faGoogle,
   faEdit,
   faTrash,
   faCheck,

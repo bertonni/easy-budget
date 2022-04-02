@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import CloseButton from "../CloseButton";
 import Input from "../Input";
+import { currencyFormatter } from "../../utils";
 
 export default function AddExpenseForm({
   handleSubmit,
@@ -31,7 +32,7 @@ export default function AddExpenseForm({
   budgetIdRef,
   handleSelectChange,
   categories,
-  handleClose
+  handleClose,
 }) {
   return (
     <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-2">
@@ -95,7 +96,7 @@ export default function AddExpenseForm({
           />
         </div>
       ) : (
-        <div className="relative mt-4">
+        <div className="relative mt-5">
           <select
             ref={paymentMethodRef}
             name="payment"
@@ -119,7 +120,7 @@ export default function AddExpenseForm({
         </div>
       )}
       <div className="flex items-center gap-2 w-full">
-        <div className="flex-grow w-full">
+        <div className="w-10/12">
           <Input
             id="date"
             type="date"
@@ -161,6 +162,16 @@ export default function AddExpenseForm({
             label=""
             onChange={(e) => setInstallmentsTotal(e.target.value)}
           />
+          {hasInstallments && (
+            <p className="absolute -bottom-5 left-0 text-gray-500 text-sm">
+              {installmentsTotal + " x "}
+              {currencyFormatter.format(
+                parseFloat(
+                  (amountRef.current.value / installmentsTotal)
+                )
+              )}
+            </p>
+          )}
         </div>
       </div>
       {showNewCategoryInput ? (
@@ -179,7 +190,7 @@ export default function AddExpenseForm({
           />
         </div>
       ) : (
-        <div className="relative mt-4">
+        <div className="relative mt-5">
           <select
             ref={budgetIdRef}
             name="budget"
@@ -208,8 +219,8 @@ export default function AddExpenseForm({
         <button
           type="submit"
           className="py-1 px-3 bg-gradient-to-r from-sky-500 border to-indigo-500 border-sky-500
-                  text-white flex items-center gap-2 rounded hover:opacity-70 hover:border-sky-400 
-                  min-w-32 transition-all justify-center uppercase"
+          text-white flex items-center gap-2 rounded hover:opacity-70 hover:border-sky-400 
+            min-w-32 transition-all justify-center uppercase"
         >
           Adicionar
         </button>

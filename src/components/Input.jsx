@@ -12,13 +12,14 @@ export default function Input({
   label,
   onChange,
   grow,
+  helperText,
   ...props
 }) {
   const growInput = grow ? 'flex-grow' : '';
   const options = {}
   if (defaultValue !== '') options['defaultValue'] = defaultValue;
   return (
-    <div className={`relative mt-4 ${growInput}`}>
+    <div className={`relative mt-5 ${growInput}`}>
       <input
         id={id}
         type={type}
@@ -36,6 +37,11 @@ export default function Input({
       {error && (
         <span className="text-sm text-red-300">
           { errorMessage }
+        </span>
+      )}
+      {helperText && (
+        <span className="text-sm text-gray-500">
+          { helperText }
         </span>
       )}
     </div>

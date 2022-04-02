@@ -1,5 +1,5 @@
-import { createContext, useContext, useMemo, useState } from "react";
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { createContext, useContext, useMemo, useState, useEffect } from "react";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import { auth, provider } from "../firebase";
 
 const AuthContext = createContext();
@@ -10,6 +10,20 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loadingInitial, setLoadingInitial] = useState(true);
+
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser(user);
+        } else {
+          setUser(null);
+        }
+        setLoadingInitial(false);
+      }),
+    []
+  );
 
   const login = () => {
     signInWithPopup(auth, provider)
@@ -53,6 +67,6 @@ export function AuthProvider({ children }) {
   );
 
   return (
-    <AuthContext.Provider value={memoedValues}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={memoedValues}>{!loadingInitial && children}</AuthContext.Provider>
   );
 }
