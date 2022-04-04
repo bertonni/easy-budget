@@ -1,15 +1,19 @@
 import { motion } from 'framer-motion';
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBudgets } from '../../contexts/BudgetsContext';
 import { currencyFormatter } from '../../utils';
 
 export default function MainIncomeCard({ disabled }) {
-  const { budgets, currYear, currMonth } = useBudgets();
+  const { currentBudget, selectedMonth } = useBudgets();
 
-  const [totalIncomes] = useState(budgets[currYear][currMonth].totalIncomes);
+  const [totalIncomes, setTotalIncomes] = useState(currentBudget.totalIncomes);
   const isDisabled = disabled ? 'pointer-events-none' : '';
   const bgColor = disabled ? 'from-gray-500 to-slate-500' : 'from-gray-600 to-slate-600';
+
+  useEffect(() => {
+    setTotalIncomes(currentBudget.totalIncomes);
+  }, [currentBudget, selectedMonth]);
 
   const navigate = useNavigate();
 

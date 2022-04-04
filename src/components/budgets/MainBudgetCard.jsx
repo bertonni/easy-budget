@@ -8,7 +8,7 @@ export default function MainBudgetCard({ disabled }) {
   const [totalAmount, setTotalAmount] = useState(0);
   const navigate = useNavigate();
 
-  const { budgets, currYear, currMonth } = useBudgets();
+  const { currentBudget } = useBudgets();
 
   const ref = useRef();
   const isDisabled = disabled ? 'pointer-events-none' : '';
@@ -16,7 +16,7 @@ export default function MainBudgetCard({ disabled }) {
 
 
   ref.current = () => {
-    setTotalAmount(budgets[currYear][currMonth].totalExpenses);
+    setTotalAmount(currentBudget.totalExpenses);
   }
 
   useEffect(() => {

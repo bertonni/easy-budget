@@ -13,8 +13,9 @@ export default function Home() {
     setDisabled(user ? false : true);
   }, [user]);
 
+
   return (
-    <Container title={"Controle de Despesas"} page="Home">
+    <Container title={"Resumo Mensal"} page="Home">
       <div className="flex flex-col items-center justify-center gap-3 w-full mt-8">
         <MainIncomeCard disabled={disabled} />
         <MainBudgetCard disabled={disabled} />
@@ -22,7 +23,7 @@ export default function Home() {
           <>
             <button
               className="flex items-center justify-center gap-3 px-4 w-40 py-2 text-lg rounded bg-sky-500 text-gray-50 font-medium
-            hover:bg-sky-600 transition-all mt-20"
+            hover:bg-sky-600 transition-all mt-20 uppercase"
               onClick={() => login()}
             >
               ENTRAR
@@ -31,12 +32,12 @@ export default function Home() {
                 className="text-gray-50"
               />
             </button>
-            <h2 className="text-white text-lg mt-10">Você precisa fazer o login para utilizar o sistema.</h2>
+            <h2 className="text-white text-lg mt-10 text-center">Você precisa fazer o login para utilizar o sistema.</h2>
           </>
         ) : (
           <button
             className="flex items-center justify-center gap-3 px-4 w-40 py-2 text-lg rounded bg-pink-500 text-gray-50 font-medium
-          hover:bg-pink-600 transition-all mt-20"
+          hover:bg-pink-600 transition-all mt-20 uppercase"
             onClick={() => logout()}
           >
             Sair

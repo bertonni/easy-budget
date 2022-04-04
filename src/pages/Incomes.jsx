@@ -15,19 +15,30 @@ export default function Incomes() {
   const [showEditIncomeModal, setShowEditIncomeModal] = useState(false);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  const { budgets, currYear, currMonth } = useBudgets();
-  const [totalIncomes, setTotalIncomes] = useState(budgets[currYear][currMonth].totalIncomes);
+  const { budgets, currYear, selectedMonth } = useBudgets();
+  const [totalIncomes, setTotalIncomes] = useState(
+    budgets[currYear][selectedMonth].totalIncomes
+  );
 
   const ref = useRef();
+  const totalUpdate = useRef();
 
   ref.current = () => {
     if (!showAddIncomeModal || !showEditIncomeModal || removed)
-      setTotalIncomes(budgets[currYear][currMonth].totalIncomes);
+      setTotalIncomes(budgets[currYear][selectedMonth].totalIncomes);
+  };
+
+  totalUpdate.current = () => {
+    setTotalIncomes(budgets[currYear][selectedMonth].totalIncomes);
   };
 
   useEffect(() => {
     ref.current();
   }, [showAddIncomeModal, showEditIncomeModal, removed]);
+
+  useEffect(() => {
+    totalUpdate.current();
+  }, [selectedMonth]);
 
   const handleEditIncomeModal = (show, id, name, value) => {
     setShowEditIncomeModal(show);
@@ -74,14 +85,14 @@ export default function Incomes() {
       }
     >
       <div className="grid grid-cols-fill gap-2 w-full md:px-10">
-        {budgets[currYear][currMonth].incomes.length === 0 ? (
+        {budgets[currYear][selectedMonth].incomes.length === 0 ? (
           <div className="flex flex-col items-center">
             <h2 className="text-center text-gray-100 text-xl mt-4">
               Você ainda não tem nenhuma receita
             </h2>
           </div>
         ) : (
-          budgets[currYear][currMonth].incomes.map((income) => {
+          budgets[currYear][selectedMonth].incomes.map((income) => {
             return (
               <IncomeCard
                 key={income.id}
@@ -96,7 +107,7 @@ export default function Incomes() {
             );
           })
         )}
-        {budgets[currYear][currMonth].incomes.length > 0 && (
+        {budgets[currYear][selectedMonth].incomes.length > 0 && (
           <IncomeCard
             key="total"
             name="Total"

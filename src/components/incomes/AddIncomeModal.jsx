@@ -23,6 +23,7 @@ export default function AddIncomeModal({
   const descriptionRef = useRef();
   const valueRef = useRef();
   const [valueError, setValueError] = useState(false);
+  const [repeatIncome, setRepeatIncome] = useState(false);
 
   const { addIncome } = useBudgets();
 
@@ -41,8 +42,10 @@ export default function AddIncomeModal({
     setValueError(false);
 
     const newIncome = { description, value: parseFloat(value) };
-    addIncome(newIncome);
+
+    addIncome(newIncome, repeatIncome);
     setShowAddIncomeModal(false);
+    setRepeatIncome(false);
   }
 
   function handleStopPropagation(e) {
@@ -80,8 +83,17 @@ export default function AddIncomeModal({
             </h1>
             <form
               onSubmit={(e) => handleSubmit(e)}
-              className="flex flex-col gap-2"
+              className="flex flex-col gap-2 relative"
             >
+              <div className="flex items-center absolute -top-2 right-0">
+                <label className="text-gray-600" htmlFor="repeat">Repetir receita</label>
+                <input
+                  type="checkbox"
+                  value="installments"
+                  className="border border-gray-300 w-8"
+                  onChange={(e) => setRepeatIncome(e.target.checked)}
+                />
+              </div>
               <Input
                 id="description"
                 customRef={descriptionRef}

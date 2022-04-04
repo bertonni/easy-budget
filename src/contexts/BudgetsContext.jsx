@@ -24,8 +24,8 @@ const initialBudget = {
   2022: {},
 };
 
-for (let index = currentMonth; index <= 12; index++) {
-  initialBudget[currentYear][index] = monthlyBase;
+for (let i = currentMonth; i <= 12; i++) {
+  initialBudget[currentYear][i] = monthlyBase;
 }
 
 const initialCategories = [
@@ -61,6 +61,8 @@ export function BudgetsProvider({ children }) {
     initialPaymentMethods
   );
   const [lastActivities, setLastActivities] = useLocalStorage("activities", []);
+  const [selectedMonth, setSelectedMonth] = useLocalStorage("selectedMonth", currMonth);
+  const [currentBudget, setCurrentBudget] = useState(budgets[currYear][selectedMonth]);
 
   const addCategory = (name) => {
     const newCategories = Array.from(categories);
@@ -80,54 +82,66 @@ export function BudgetsProvider({ children }) {
     setPaymentMethods(newPaymentMethods);
   };
 
-  const addIncome = ({ description, value }) => {
-    const incomesCopy = Array.from(budgets[currYear][currMonth]["incomes"]);
-    const newIncome = { id: uuidV4(), description, value };
-    incomesCopy.push(newIncome);
-    const budgetsCopy = Object.assign({}, budgets);
+  const addIncome = ({ description, value }, repeat) => {
 
-    budgetsCopy[currYear][currMonth].incomes = incomesCopy;
-    budgetsCopy[currYear][currMonth].totalIncomes += value;
+    let newIncome;
+    const budgetsCopy = Object.assign({}, budgets);
+    if (repeat) {
+      for (let i = selectedMonth; i <= 12; i++) {
+        const incomesCopy = Array.from(budgetsCopy[currYear][i]["incomes"]);
+        newIncome = { id: uuidV4(), description, value };
+        incomesCopy.push(newIncome);
+        budgetsCopy[currYear][i].incomes = incomesCopy;
+        budgetsCopy[currYear][i].totalIncomes += value;
+      }
+    } else {
+      const incomesCopy = Array.from(budgets[currYear][selectedMonth]["incomes"]);
+      newIncome = { id: uuidV4(), description, value };
+      incomesCopy.push(newIncome);
+      budgetsCopy[currYear][selectedMonth].incomes = incomesCopy;
+      budgetsCopy[currYear][selectedMonth].totalIncomes += value;
+    }
 
     setBudgets(budgetsCopy);
     setLastActivities((prevActivities) => [...prevActivities, newIncome]);
   };
 
   const updateIncome = (income) => {
-    const incomeIndex = budgets[currYear][currMonth]["incomes"].findIndex(
+    const incomeIndex = budgets[currYear][selectedMonth]["incomes"].findIndex(
       (inc) => inc.id === income.id
     );
+
     const budgetsCopy = Object.assign({}, budgets);
 
     if (incomeIndex >= 0) {
-      budgetsCopy[currYear][currMonth].totalIncomes =
-        budgetsCopy[currYear][currMonth].totalIncomes -
-        budgetsCopy[currYear][currMonth].incomes[incomeIndex].value +
+      budgetsCopy[currYear][selectedMonth].totalIncomes =
+        budgetsCopy[currYear][selectedMonth].totalIncomes -
+        budgetsCopy[currYear][selectedMonth].incomes[incomeIndex].value +
         income.value;
-      budgetsCopy[currYear][currMonth].incomes[incomeIndex] = income;
+      budgetsCopy[currYear][selectedMonth].incomes[incomeIndex] = income;
       setBudgets(budgetsCopy);
     }
   };
 
   const deleteIncome = (incomeId) => {
     const budgetsCopy = {};
-    const deletedIncome = budgets[currYear][currMonth].incomes.filter(
+    const deletedIncome = budgets[currYear][selectedMonth].incomes.filter(
       (income) => income.id === incomeId
     )[0];
 
     Object.assign(budgetsCopy, budgets);
-    const incomesCopy = budgetsCopy[currYear][currMonth].incomes.filter(
+    const incomesCopy = budgetsCopy[currYear][selectedMonth].incomes.filter(
       (income) => income.id !== incomeId
     );
 
-    budgetsCopy[currYear][currMonth].incomes = incomesCopy;
-    budgetsCopy[currYear][currMonth].totalIncomes -= deletedIncome.value;
+    budgetsCopy[currYear][selectedMonth].incomes = incomesCopy;
+    budgetsCopy[currYear][selectedMonth].totalIncomes -= deletedIncome.value;
     setBudgets(budgetsCopy);
   };
 
   const addExpense = (newExpense) => {
     const newExpenseBase = { id: uuidV4(), ...newExpense };
-    const expensesCopy = Array.from(budgets[currYear][currMonth].expenses);
+    const expensesCopy = Array.from(budgets[currYear][selectedMonth].expenses);
     const budgetsCopy = Object.assign({}, budgets);
 
     
@@ -146,22 +160,22 @@ export function BudgetsProvider({ children }) {
       }
     }
 
-    budgetsCopy[currYear][currMonth].totalExpenses += newExpense.amount;
-    budgetsCopy[currYear][currMonth].expenses = expensesCopy;
+    budgetsCopy[currYear][selectedMonth].totalExpenses += newExpense.amount;
+    budgetsCopy[currYear][selectedMonth].expenses = expensesCopy;
 
     setBudgets(budgetsCopy);
     setLastActivities((prevActivities) => [...prevActivities, newExpenseBase]);
   };
 
   const getFixedExpenses = () => {
-    const fixed = budgets[currYear][currMonth].expenses.filter(
+    const fixed = budgets[currYear][selectedMonth].expenses.filter(
       (expense) => expense.type === "fixed"
     );
     return Array.from(fixed);
   };
 
   const getVariableExpenses = () => {
-    const variable = budgets[currYear][currMonth].expenses.filter(
+    const variable = budgets[currYear][selectedMonth].expenses.filter(
       (expense) => expense.type === "variable"
     );
     return Array.from(variable);
@@ -170,11 +184,15 @@ export function BudgetsProvider({ children }) {
   const memoedValues = useMemo(
     () => ({
       budgets,
+      currentBudget,
       categories,
       lastActivities,
       currMonth,
       currYear,
       paymentMethods,
+      selectedMonth,
+      setSelectedMonth,
+      setCurrentBudget,
       addPaymentMethod,
       setCurrMonth,
       setCurrYear,
@@ -186,7 +204,7 @@ export function BudgetsProvider({ children }) {
       updateIncome,
       deleteIncome,
     }),
-    [budgets, categories, paymentMethods]
+    [budgets, categories, paymentMethods, selectedMonth, currentBudget]
   );
 
   return (
