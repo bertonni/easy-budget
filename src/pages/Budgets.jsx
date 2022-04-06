@@ -11,7 +11,7 @@ export default function Budgets() {
   const {
     budgets,
     currYear,
-    currMonth,
+    selectedMonth,
     getFixedExpenses,
     getVariableExpenses,
   } = useBudgets();
@@ -44,11 +44,11 @@ export default function Budgets() {
     .reduce((a, b) => a + b) : 0;
 
   useEffect(() => {
-    if (budgets[currYear][currMonth].expenses.length > 0) {
-      setTotalAmounts(budgets[currYear][currMonth].totalExpenses);
+    if (budgets[currYear][selectedMonth].expenses.length > 0) {
+      setTotalAmounts(budgets[currYear][selectedMonth].totalExpenses);
       ref.current();
     }
-  }, [budgets, currYear, currMonth]);
+  }, [budgets, currYear, selectedMonth]);
 
   function handleEditBudgetModal(value, id, name, max) {
     setShowEditBudgetModal(value);
@@ -101,7 +101,7 @@ export default function Budgets() {
       }
     >
       <div className="grid grid-cols-fill gap-2 w-full md:px-10">
-        {budgets[currYear][currMonth].expenses.length === 0 ? (
+        {budgets[currYear][selectedMonth].expenses.length === 0 ? (
           <div className="flex flex-col items-center">
             <h2 className="text-center text-gray-100 text-xl mt-4">
               Você ainda não tem nenhuma despesa

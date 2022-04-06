@@ -14,7 +14,6 @@ const monthlyBase = {
   expenses: [],
   totalIncomes: 0,
   totalExpenses: 0,
-  balance: 0
 }
 
 const currentYear = new Date().getFullYear();
@@ -140,31 +139,36 @@ export function BudgetsProvider({ children }) {
   };
 
   const addExpense = (newExpense) => {
-    const newExpenseBase = { id: uuidV4(), ...newExpense };
-    const expensesCopy = Array.from(budgets[currYear][selectedMonth].expenses);
     const budgetsCopy = Object.assign({}, budgets);
-
     
     const current = parseInt(newExpense.installments.current);
     const total = parseInt(newExpense.installments.total);
 
     if (current < total) {
-      for (let i = currMonth; i <= (currMonth + total - current); i++) {
+      let initialInstallment = current;
+      let updatableMonth = parseInt(selectedMonth);
+      for (let i = current; i <= total; i++) {
+        const currentExpenseCopy = Array.from(budgetsCopy[currYear][updatableMonth].expenses);
+        const expenseCopy = Object.assign({}, { id: uuidV4(), ...newExpense });
+        expenseCopy.installments = Object.assign({}, newExpense.installments);
+        expenseCopy.amount = parseFloat((newExpense.amount / total));
+        expenseCopy.installments.current = initialInstallment;
+        initialInstallment++;
         
-        const newExpenseCopy = Object.assign({}, newExpense);
-        newExpenseCopy.installments = Object.assign({}, newExpense.installments);
-        newExpenseCopy.amount = parseFloat((newExpense.amount / total));
-        newExpenseCopy.installments.current = i;
-
-        budgetsCopy[currYear][i].expenses.push(newExpenseCopy);
+        currentExpenseCopy.push(expenseCopy);
+        budgetsCopy[currYear][updatableMonth].expenses = currentExpenseCopy;
+        budgetsCopy[currYear][updatableMonth].totalExpenses += parseFloat((newExpense.amount / total));
+        updatableMonth++;
       }
+    } else {
+      const expensesCopy = Array.from(budgets[currYear][selectedMonth].expenses);
+      expensesCopy.push({ id: uuidV4(), ...newExpense })
+      budgetsCopy[currYear][selectedMonth].totalExpenses += newExpense.amount;
+      budgetsCopy[currYear][selectedMonth].expenses = expensesCopy;
     }
 
-    budgetsCopy[currYear][selectedMonth].totalExpenses += newExpense.amount;
-    budgetsCopy[currYear][selectedMonth].expenses = expensesCopy;
-
     setBudgets(budgetsCopy);
-    setLastActivities((prevActivities) => [...prevActivities, newExpenseBase]);
+    // setLastActivities((prevActivities) => [...prevActivities, newExpenseBase]);
   };
 
   const getFixedExpenses = () => {

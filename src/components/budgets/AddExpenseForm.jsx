@@ -71,6 +71,7 @@ export default function AddExpenseForm({
       />
       <Input
         id="amount"
+        name="amount"
         type="number"
         min={0}
         step={0.01}

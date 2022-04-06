@@ -106,7 +106,7 @@ export default function ViewExpensesModal({
                         className="py-1 px-1 text-center bg-blue-300 text-white rounded flex
                       items-center justify-center hover:bg-blue-400"
                       >
-                        <FontAwesomeIcon icon="eye" />
+                        <FontAwesomeIcon icon="edit" />
                       </button>
                       <button
                         onClick={() => console.log("todo delete")}
